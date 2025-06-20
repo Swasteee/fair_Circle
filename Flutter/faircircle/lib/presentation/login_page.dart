@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:faircircle/view/dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     if (username == 'admin' && password == 'admin') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
       setState(() {

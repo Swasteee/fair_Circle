@@ -23,10 +23,10 @@ class SignupPage extends StatelessWidget {
                 GestureDetector(
                   child: Icon(Icons.arrow_back_ios_new),
                   onTap: () {
-                                    Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => SignupPage()),
-                );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => SignupPage()),
+                    );
                   },
                 ),
                 Text("Back", style: TextStyle(color: Colors.brown)),
@@ -42,7 +42,10 @@ class SignupPage extends StatelessWidget {
                 color: Colors.brown,
               ),
             ),
-            Image.asset("assets/icons/logo.png", height: 140),
+            Image.asset(
+              "/Users/swastee/Desktop/MobileApplication/Flutter/faircircle/assets/icons/logo.png",
+              height: 140,
+            ),
             SizedBox(height: 20),
             buildField("Username", usernameController),
             buildField("Email Adress", emailController),

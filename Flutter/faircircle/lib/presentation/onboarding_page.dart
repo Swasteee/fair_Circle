@@ -1,6 +1,5 @@
-import 'package:faircircle/view/login_page.dart';
-import 'package:faircircle/view/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -32,7 +31,7 @@ class OnboardingPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            Image.asset('assets/icons/logo.png', height: 150),
+            Image.asset('assets/icon/logo.png'),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -50,24 +49,6 @@ class OnboardingPage extends StatelessWidget {
                 ),
               ),
               child: Text("Get Started"),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => SignupPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Color(0xFFA0522D),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: Text("Sign Up"),
             ),
           ],
         ),

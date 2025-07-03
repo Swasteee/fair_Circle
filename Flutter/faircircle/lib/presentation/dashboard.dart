@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:faircircle/data/datasource/product_datasource.dart';
+import 'package:faircircle/data/repositories/product_repository_impl.dart';
+import 'package:faircircle/domain/entities/product_entity.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
+
+  Future<List<ProductEntity>> _fetchProducts() async {
+    final remoteDataSource = ProductRemoteDataSource(
+      apiUrl: 'https://yourapi.com/products',
+    ); // <-- Replace with your real API
+    final repo = ProductRepositoryImpl(
+      localDataSource: null, // Not used here
+      remoteDataSource: remoteDataSource,
+    );
+    return await repo.fetchProductsFromApi();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,20 +145,36 @@ class DashboardPage extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
-                // Products Grid
-                GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.7,
-                  children: [
-                    _productCard("Sun Screen", "assets/images/sunscreen.png"),
-                    _productCard("Moisturizer", "assets/images/moisturizer.png"),
-                    _productCard("Serum", "assets/images/serum.png"),
-                    _productCard("Cream", "assets/images/cream.png"),
-                  ],
+                // Products Grid (dynamic)
+                FutureBuilder<List<ProductEntity>>(
+                  future: _fetchProducts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: \\${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No products found'));
+                    }
+                    final products = snapshot.data!;
+                    return GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 0.7,
+                      children:
+                          products
+                              .map(
+                                (product) => _productCard(
+                                  product.title,
+                                  product.imagePath,
+                                ),
+                              )
+                              .toList(),
+                    );
+                  },
                 ),
               ],
             ),
@@ -157,10 +187,7 @@ class DashboardPage extends StatelessWidget {
         selectedItemColor: Color(0xFF8B4A2F),
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Dashboard",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Dashboard"),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_border),
             label: "Wishlist",
@@ -197,9 +224,11 @@ class DashboardPage extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: Image.asset(
+            child: Image.network(
               imagePath,
               fit: BoxFit.contain,
+              errorBuilder:
+                  (context, error, stackTrace) => Icon(Icons.broken_image),
             ),
           ),
           const SizedBox(height: 10),

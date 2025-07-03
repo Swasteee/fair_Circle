@@ -7,7 +7,7 @@ class ProductEntity {
     required this.imagePath,
   });
 
-  // Optional: Equatable-like equality for value comparison (for testing, etc.)
+ 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
